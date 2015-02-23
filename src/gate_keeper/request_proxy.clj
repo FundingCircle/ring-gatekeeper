@@ -9,7 +9,7 @@
 (defn- build-url [host path]
   (.toString (java.net.URL. (java.net.URL. host) path)))
 
-(defn proxy-request [server-to-host request]
+(defn proxy-request-by-server [server-to-host request]
   (let [domain (:server-name request)
         host (get server-to-host domain)]
     (if host
