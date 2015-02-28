@@ -18,6 +18,7 @@
                                     :body (:body request)
                                     :headers (:headers request)
                                     :query-params (:query-params request)
-                                    :throw-exceptions false})
+                                    :throw-exceptions false
+                                    :as :stream})
                    [:status :body])
       not-found-response)))
