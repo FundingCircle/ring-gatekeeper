@@ -1,13 +1,13 @@
-(ns gate-keeper.authenticators.auth0-spec
+(ns gatekeeper.authenticators.auth0-spec
   (:require [speclj.core :refer :all]
             [jerks-whistling-tunes.core :as jwt]
-            [gate-keeper.authenticators.auth0 :refer :all]
+            [gatekeeper.authenticators.auth0 :refer :all]
             [clj-http.fake :refer [with-fake-routes-in-isolation]]))
 
 (def failed-token-info {"https://subdomain.auth0.com/tokeninfo" {:post (fn [req] {:status 401 :body "{}"})}})
 (def successful-token-info {"https://subdomain.auth0.com/tokeninfo" {:post (fn [req] {:status 200 :body "success"})}})
 
-(context "gate-keeper.authenticators.auth0"
+(context "gatekeeper.authenticators.auth0"
   (describe "handle-request?"
     (with truthy-authenticator (new-authenticator {:can-handle-request-fn (fn [req] true)}))
     (with falsy-authenticator (new-authenticator {:can-handle-request-fn (fn [req] false)}))

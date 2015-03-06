@@ -1,10 +1,10 @@
-(ns gate-keeper.request-proxy-spec
+(ns gatekeeper.request-proxy-spec
   (:require [speclj.core :refer :all]
-            [gate-keeper.request-proxy :refer [proxy-request-by-server]]
+            [gatekeeper.request-proxy :refer [proxy-request-by-server]]
             [clj-http.fake :refer [with-fake-routes-in-isolation]]))
 
 (def hello-request
-  {"hello.com/gate-keeper" {:get (fn [req]
+  {"hello.com/gatekeeper" {:get (fn [req]
                                   {:status 200 :body "{}"})}})
 
 (context "auth-proxy.request-proxy"
@@ -19,7 +19,7 @@
         (with-fake-routes-in-isolation hello-request
           (proxy-request-by-server {"hello" "http://hello.com"} {:server-name "hello"
                                                                  :request-method :get
-                                                                 :uri "/gate-keeper"})))
+                                                                 :uri "/gatekeeper"})))
       (it "forwards the response status"
         (should= 200
                  (:status @response)))

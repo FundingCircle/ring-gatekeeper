@@ -1,4 +1,4 @@
-(ns gate-keeper.authenticators.core)
+(ns gatekeeper.authenticators.core)
 
 (defprotocol Authenticator
   "Authenticates requests"

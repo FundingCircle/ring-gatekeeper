@@ -1,4 +1,4 @@
-(ns gate-keeper.core)
+(ns gatekeeper.core)
 
 (def find-first (comp first filter))
 
@@ -6,7 +6,7 @@
   {:status 401
    :body "Not authenticated"})
 
-(defmacro def-gate-keeper [fn-sym opts]
+(defmacro def-gatekeeper [fn-sym opts]
   (let [{:keys [authenticators proxy-fn]} opts]
     `(defn ~fn-sym [request#]
        (if-let [authenticator# (find-first #(.handle-request? % request#) ~authenticators)]

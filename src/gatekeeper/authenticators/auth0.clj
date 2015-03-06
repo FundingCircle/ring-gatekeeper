@@ -1,5 +1,5 @@
-(ns gate-keeper.authenticators.auth0
-  (:require [gate-keeper.authenticators.core :as auth]
+(ns gatekeeper.authenticators.auth0
+  (:require [gatekeeper.authenticators.core :as auth]
             [clj-http.client :as client]
             [clojure.data.json :as json]
             [jerks-whistling-tunes.core :as jwt]

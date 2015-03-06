@@ -1,4 +1,4 @@
-(ns gate-keeper.request-proxy
+(ns gatekeeper.request-proxy
   (:require [taoensso.timbre :as timbre :refer [log debug info error]]
             [clj-http.client :as client]
             [clojure.data.json :as json]))
