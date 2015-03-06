@@ -1,8 +1,8 @@
 (defproject gate_keeper "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :license {:name "BSD 3-clause"
+            :url "http://opensource.org/licenses/BSD-3-Clause"}
   :plugins [[speclj "3.1.0"]]
   :profiles {:dev {:dependencies [[speclj "3.1.0"]
                                   [clj-http-fake "1.0.1"]]}}
