@@ -1,6 +1,6 @@
-(defproject gatekeeper "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+(defproject gatekeeper "0.1.0"
+  :description "Authentication middleware"
+  :url "https://github.com/FundingCircle/gatekeeper"
   :license {:name "BSD 3-clause"
             :url "http://opensource.org/licenses/BSD-3-Clause"}
   :plugins [[speclj "3.1.0"]]
