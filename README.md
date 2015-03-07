@@ -2,6 +2,10 @@
 
 Gatekeeper is a Ring handler for authenticating and forwarding requests.
 
+## Installation
+
+`[gatekeeper "0.1.0"]`
+
 ## Usage
 
 ```clojure
