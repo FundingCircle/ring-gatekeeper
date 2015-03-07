@@ -1,4 +1,4 @@
-(defproject gatekeeper "0.1.0"
+(defproject gatekeeper "0.1.1"
   :description "Authentication middleware"
   :url "https://github.com/FundingCircle/gatekeeper"
   :license {:name "BSD 3-clause"

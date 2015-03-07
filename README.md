@@ -4,7 +4,7 @@ Gatekeeper is a Ring handler for authenticating and forwarding requests.
 
 ## Installation
 
-`[gatekeeper "0.1.0"]`
+`[gatekeeper "0.1.1"]`
 
 ## Usage
 
