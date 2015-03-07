@@ -24,7 +24,7 @@
   (handle-request? [this request]
     ((get-in this [:opts :can-handle-request-fn]) request))
 
-  (authenticated? [this request]
+  (authenticate [this request]
     (let [{:keys [client-id client-secret subdomain]} (:opts this)
           token (-> request
                   :headers

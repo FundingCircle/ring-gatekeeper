@@ -18,7 +18,7 @@
     (it "returns falsy function result"
       (should-not (.handle-request? @falsy-authenticator {}))))
 
-  (describe "authenticated?"
+  (describe "authenticate"
     (with authenticator (new-authenticator {:can-handle-request-fn (fn [req] true)
                                             :client-id "client-id"
                                             :client-secret "client-secret"
@@ -29,23 +29,23 @@
         (it)))
 
     (it "is not authenticated without an authorization header"
-      (should-not (.authenticated? @authenticator {:headers {}})))
+      (should-not (.authenticate @authenticator {:headers {}})))
 
     (it "is not authenticated without a malformed authorization header"
-      (should-not (.authenticated? @authenticator {:headers {"authorization" "poop butt"}})))
+      (should-not (.authenticate @authenticator {:headers {"authorization" "poop butt"}})))
 
     (it "handles invalid tokens"
-      (should-not (.authenticated? @authenticator {:headers {"authorization" "Bearer invalid"}})))
+      (should-not (.authenticate @authenticator {:headers {"authorization" "Bearer invalid"}})))
 
     (it "handles auth0 error"
       (should-not
         (with-fake-routes-in-isolation failed-token-info
-          (.authenticated? @authenticator {:headers {"authorization" "Bearer valid"}}))))
+          (.authenticate @authenticator {:headers {"authorization" "Bearer valid"}}))))
 
     (it "adds the x-user header when successful"
       (should= "success"
                (get-in (with-fake-routes-in-isolation successful-token-info
-                         (.authenticated? @authenticator {:headers {"authorization" "Bearer valid"}}))
+                         (.authenticate @authenticator {:headers {"authorization" "Bearer valid"}}))
                        [:headers "x-user"])))))
 
 (run-specs)

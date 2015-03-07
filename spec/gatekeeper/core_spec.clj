@@ -4,15 +4,19 @@
             [gatekeeper.authenticators.core :as auth]))
 
 (defn proxy-request [request]
-  200)
+  (if (:authenticated request)
+    200
+    (throw (Exception. "Request was not authenticated"))))
 
 (defrecord DumbAuthenticator [can-handle is-authenticated]
   auth/Authenticator
 
   (handle-request? [this request]
     (:can-handle this))
-  (authenticated? [this request]
-    (:is-authenticated this)))
+  (authenticate [this request]
+    (if (:is-authenticated this)
+      (assoc request :authenticated true)
+      false)))
 
 (def-gatekeeper rejector {:authenticators [(DumbAuthenticator. true false)]
                            :proxy-fn proxy-request})
