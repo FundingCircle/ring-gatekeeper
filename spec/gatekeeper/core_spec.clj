@@ -1,7 +1,8 @@
 (ns gatekeeper.core-spec
   (:require [speclj.core :refer :all]
             [gatekeeper.core :refer :all]
-            [gatekeeper.authenticators.core :as auth]))
+            [gatekeeper.authenticators.core :as auth]
+            speclj.run.standard))
 
 (defn proxy-request [request]
   (if (:authenticated request)
