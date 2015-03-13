@@ -10,9 +10,9 @@
 (context "auth-proxy.request-proxy"
   (describe "proxy-request-by-server"
     (context "when forwarding server is not found"
-      (it "has a 417 when forwarding server not found"
-        (should= 417
-                 (:status (proxy-request-by-server {} {:server-name "here" :request-method :get})))))
+      (it "is falsy when forwarding server not found"
+        (should-not
+          (proxy-request-by-server {} {:server-name "here" :request-method :get}))))
 
     (context "when forwarding server is found"
       (with response

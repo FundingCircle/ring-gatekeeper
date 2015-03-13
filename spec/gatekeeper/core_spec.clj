@@ -26,6 +26,8 @@
 (def-gatekeeper happy-path {:authenticators [(DumbAuthenticator. false false)
                                               (DumbAuthenticator. true true)]
                              :proxy-fn proxy-request})
+(def-gatekeeper unroutable {:authenticators [(DumbAuthenticator. true true)]
+                             :proxy-fn (constantly nil)})
 
 (describe "gatekeeper.core"
   (describe "def-gatekeeper"
@@ -36,6 +38,10 @@
     (it "is forbidden when not authenticated"
       (should= 401
                (:status (rejector {}))))
+
+    (it "is not found when request is not forwardable"
+      (should= 404
+               (:status (unroutable {}))))
 
     (it "passes the request to the proxy function"
       (should= 200
