@@ -9,5 +9,6 @@
   :test-paths ["spec"]
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [clj-http "1.0.1"]
+                 [clojurewerkz/spyglass "1.0.0"]
                  [com.taoensso/timbre "3.2.1"]
                  [jerks-whistling-tunes "0.1.1"]])
