@@ -41,6 +41,8 @@ the response. The built in forwarders are:
 
 * `proxy-request-by-server`: Proxies the request based on the server name
 
+The forwarder can also return a falsy value, in which case Gatekeeper will respond with a 404.
+
 ## License
 
 Copyright © 2015 Funding Circle

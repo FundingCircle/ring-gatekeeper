@@ -3,9 +3,6 @@
             [clj-http.client :as client]
             [clojure.data.json :as json]))
 
-(def not-found-response {:status 417
-                         :body (json/write-str {:message "Not found"})})
-
 (defn- build-url [host path]
   (.toString (java.net.URL. (java.net.URL. host) path)))
 
@@ -21,4 +18,4 @@
                                     :throw-exceptions false
                                     :as :stream})
                    [:status :body])
-      not-found-response)))
+      nil)))
