@@ -31,8 +31,8 @@
     (it "is not authenticated without an authorization header"
       (should-not (.authenticate @authenticator {:headers {}})))
 
-    (it "is not authenticated without a malformed authorization header"
-      (should-not (.authenticate @authenticator {:headers {"authorization" "poop butt"}})))
+    (it "is not authenticated with a malformed authorization header"
+      (should-not (.authenticate @authenticator {:headers {"authorization" "not valid"}})))
 
     (it "handles invalid tokens"
       (should-not (.authenticate @authenticator {:headers {"authorization" "Bearer invalid"}})))
