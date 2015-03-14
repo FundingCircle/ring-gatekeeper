@@ -13,9 +13,9 @@
   auth/Authenticator
 
   (handle-request? [this request]
-    (:can-handle this))
+    can-handle)
   (authenticate [this request]
-    (if (:is-authenticated this)
+    (if is-authenticated
       (assoc request :authenticated true)
       false)))
 

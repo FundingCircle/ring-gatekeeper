@@ -22,10 +22,10 @@
   auth/Authenticator
 
   (handle-request? [this request]
-    ((get-in this [:opts :can-handle-request-fn]) request))
+    ((:can-handle-request-fn opts) request))
 
   (authenticate [this request]
-    (let [{:keys [client-id client-secret subdomain]} (:opts this)
+    (let [{:keys [client-id client-secret subdomain]} opts
           token (-> request
                   :headers
                   (get "authorization" "")
