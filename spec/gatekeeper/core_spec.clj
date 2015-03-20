@@ -1,6 +1,6 @@
-(ns gatekeeper.authentication-spec
+(ns gatekeeper.core-spec
   (:require [speclj.core :refer :all]
-            [gatekeeper.authentication :refer :all]
+            [gatekeeper.core :refer :all]
             [gatekeeper.authenticators.core :as auth]
             speclj.run.standard))
 
@@ -22,7 +22,7 @@
 (defn handle-throw[request]
   (throw (Exception. "Should not have made it here")))
 
-(describe "gatekeeper.authentication"
+(describe "gatekeeper.core"
   (describe "authenticate"
     (context "when no authenticators can handle request"
       (with auth-fn (authenticate handle-throw

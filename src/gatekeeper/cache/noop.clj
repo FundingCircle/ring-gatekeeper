@@ -8,13 +8,7 @@
     nil)
 
   (set [this key expire value]
-    nil)
-
-  (get-all [this keys]
-    [])
-
-  (inc-or-set [this key amount expire default]
-    0))
+    nil))
 
 (defn new-cache []
   (Noop.))

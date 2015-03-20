@@ -1,4 +1,4 @@
-(ns gatekeeper.authentication
+(ns gatekeeper.core
   (:require [clojure.data.json :as json]))
 
 (def find-first (comp first filter))
