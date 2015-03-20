@@ -1,8 +1,8 @@
-(ns gatekeeper.authenticators.auth0-spec
+(ns ring-gatekeeper.authenticators.auth0-spec
   (:require [clj-http.client] ; Must be loaded before clj-http.fake
             [clj-http.fake :refer [with-fake-routes-in-isolation]]
-            [gatekeeper.authenticators.auth0 :refer :all]
-            [gatekeeper.cache.core :as cache]
+            [ring-gatekeeper.authenticators.auth0 :refer :all]
+            [ring-gatekeeper.cache.core :as cache]
             [jerks-whistling-tunes.core :as jwt]
             [speclj.core :refer :all]))
 
@@ -18,7 +18,7 @@
   (set [this key expire value]
     nil))
 
-(context "gatekeeper.authenticators.auth0"
+(context "ring-gatekeeper.authenticators.auth0"
   (describe "handle-request?"
     (with truthy-authenticator (new-authenticator {:can-handle-request-fn (constantly true)}))
     (with falsy-authenticator (new-authenticator {:can-handle-request-fn (constantly false)}))

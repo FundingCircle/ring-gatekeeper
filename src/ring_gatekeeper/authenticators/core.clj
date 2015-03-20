@@ -1,4 +1,4 @@
-(ns gatekeeper.authenticators.core)
+(ns ring-gatekeeper.authenticators.core)
 
 (defprotocol Authenticator
   "Authenticates requests"
