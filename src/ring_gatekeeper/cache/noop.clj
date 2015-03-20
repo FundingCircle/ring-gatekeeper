@@ -1,5 +1,5 @@
-(ns gatekeeper.cache.noop
-  (:require [gatekeeper.cache.core :as core]))
+(ns ring-gatekeeper.cache.noop
+  (:require [ring-gatekeeper.cache.core :as core]))
 
 (deftype Noop []
   core/Cache

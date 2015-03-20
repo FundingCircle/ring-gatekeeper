@@ -1,6 +1,6 @@
-(ns gatekeeper.cache.memcached
+(ns ring-gatekeeper.cache.memcached
   (:require [clojurewerkz.spyglass.client :as memcached-client]
-            [gatekeeper.cache.core :as core]))
+            [ring-gatekeeper.cache.core :as core]))
 
 (deftype Memcached [client]
   core/Cache

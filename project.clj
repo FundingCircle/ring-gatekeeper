@@ -1,6 +1,6 @@
-(defproject gatekeeper "0.1.1"
+(defproject ring-gatekeeper "0.1.1"
   :description "Authentication middleware"
-  :url "https://github.com/FundingCircle/gatekeeper"
+  :url "https://github.com/FundingCircle/ring-gatekeeper"
   :license {:name "BSD 3-clause"
             :url "http://opensource.org/licenses/BSD-3-Clause"}
   :plugins [[speclj "3.1.0"]]

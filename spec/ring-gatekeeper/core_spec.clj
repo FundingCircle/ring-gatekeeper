@@ -1,7 +1,7 @@
-(ns gatekeeper.core-spec
+(ns ring-gatekeeper.core-spec
   (:require [speclj.core :refer :all]
-            [gatekeeper.core :refer :all]
-            [gatekeeper.authenticators.core :as auth]
+            [ring-gatekeeper.core :refer :all]
+            [ring-gatekeeper.authenticators.core :as auth]
             speclj.run.standard))
 
 (defrecord DumbAuthenticator [can-handle is-authenticated]
@@ -22,7 +22,7 @@
 (defn handle-throw[request]
   (throw (Exception. "Should not have made it here")))
 
-(describe "gatekeeper.core"
+(describe "ring-gatekeeper.core"
   (describe "authenticate"
     (context "when no authenticators can handle request"
       (with auth-fn (authenticate handle-throw

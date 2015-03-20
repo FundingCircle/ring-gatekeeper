@@ -1,10 +1,10 @@
-# Gatekeeper
+# Ring-gatekeeper
 
 Gatekeeper is a collection of Ring middlewares and handlers for authenticating and forwarding requests.
 
 ## Installation
 
-`[gatekeeper "0.1.1"]`
+TBD
 
 ## Usage
 
@@ -12,7 +12,7 @@ Gatekeeper is a collection of Ring middlewares and handlers for authenticating a
 
 ```clojure
 (ns myapp.core
-  (:require [gatekeeper.core :as auth])
+  (:require [ring-gatekeeper.core :as auth])
 
 (def app (-> root-handler
              (auth/authenticate [(MyAuthenticator.) (.MyOtherAuthenticator)]

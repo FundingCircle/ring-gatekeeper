@@ -1,8 +1,8 @@
-(ns gatekeeper.authenticators.auth0
-  (:require [gatekeeper.authenticators.core :as auth]
+(ns ring-gatekeeper.authenticators.auth0
+  (:require [ring-gatekeeper.authenticators.core :as auth]
             [clj-http.client :as client]
             [clojure.data.json :as json]
-            [gatekeeper.cache.noop :as noop-cache]
+            [ring-gatekeeper.cache.noop :as noop-cache]
             [jerks-whistling-tunes.core :as jwt]
             [taoensso.timbre :as timbre :refer [log debug info error]]))
 

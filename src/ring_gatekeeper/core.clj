@@ -1,4 +1,4 @@
-(ns gatekeeper.core
+(ns ring-gatekeeper.core
   (:require [clojure.data.json :as json]))
 
 (def find-first (comp first filter))

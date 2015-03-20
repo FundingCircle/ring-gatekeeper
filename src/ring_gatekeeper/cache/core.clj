@@ -1,4 +1,4 @@
-(ns gatekeeper.cache.core)
+(ns ring-gatekeeper.cache.core)
 
 (defprotocol Cache
   "Caches values"
