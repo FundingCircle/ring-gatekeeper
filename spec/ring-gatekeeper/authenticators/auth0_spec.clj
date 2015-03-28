@@ -9,13 +9,15 @@
 (def failed-token-info {"https://subdomain.auth0.com/tokeninfo" {:post (fn [req] {:status 401 :body "{}"})}})
 (def successful-token-info {"https://subdomain.auth0.com/tokeninfo" {:post (fn [req] {:status 200 :body "success"})}})
 
-(deftype ConstantCache [result]
+(deftype ConstantCache [expected-key result]
   cache/Cache
 
   (get [this key]
-    result)
+    (if (= expected-key key)
+      result
+      (throw (Exception. (str "expected " expected-key " but received " key)))))
 
-  (set [this key expire value]
+  (set [this key value]
     nil))
 
 (context "ring-gatekeeper.authenticators.auth0"
@@ -38,11 +40,15 @@
     (with cached-authenticator (new-authenticator {:can-handle-request-fn (constantly true)
                                                    :client-id "client-id"
                                                    :client-secret "client-secret"
-                                                   :cache (ConstantCache. "success")
+                                                   :cache (ConstantCache. "token-info-aud-sub" "success")
                                                    :subdomain "subdomain"}))
 
     (around [it]
-      (with-redefs [jwt/valid? (fn [_ token & more] (= token "valid"))]
+      (with-redefs [jwt/validate (fn [_ token & more]
+                                   (if (= token "valid")
+                                     {:sub "sub"
+                                      :aud "aud"}
+                                     false))]
         (it)))
 
     (it "is not authenticated without an authorization header"

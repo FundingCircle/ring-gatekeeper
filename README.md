@@ -24,9 +24,52 @@ until one is found that can handle the request. If no matching authenticators ar
 reports that the request is not authorized, the optional unauthorized response is returned. Otherwise, the request
 continues in the chain.
 
-The following authenticators are included:
+### Authenticators
 
-* Auth0: Authorizes the request with Auth0 and includes the user's information in the "x-user" header
+Authenticators provide an interface to 3rd party authentication services.
+
+#### Auth0
+
+Authenticates the user's JWT and adds the user's information in the `x-user` header.
+
+```clojure
+(ns myapp.core
+  (:require [ring-gatekeeper.authenticators.auth0 :as auth0]))
+
+(def my-authenticator (auth0/new-authenticator {:can-handle-request-fn (constantly true)
+                                                :client-id "client-id"
+                                                :client-secret "client-secret"
+                                                :subdomain "subdomain"}))
+```
+
+Options:
+
+* `can-handle-request-fn`: Determines if the authenticator can handle a particular request
+* `client-id`: Auth0 client id
+* `client-secret`: Auth0 client secret
+* `subdomain`: Auth0 subdomain
+* `cache`: Cache for storing user info
+
+### Caches
+
+Caches are used by various authenticators to improve performance.
+
+#### Memcached
+
+```clojure
+(ns myapp.core
+  (:require [ring-gatekeeper.cache.memcached :as gate-cache]
+            [clojurewerkz.spyglass.client :as memcached-client])
+
+(def client (memcached-client/text-connection "localhost:11211"))
+(def auth-cache (gate-cache/new-cache client {:key-prefix "user-info-"
+                                              :expire-sec 2400}))
+```
+
+Options:
+
+* `key-prefix`: Prefix added on keys to prevent collisions
+* `expire-sec`: How long key should stay in the cache
 
 ## License
 
