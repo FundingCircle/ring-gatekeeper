@@ -9,11 +9,13 @@
 (defn- auth0-token-info-url [subdomain]
   (str "https://" subdomain ".auth0.com/tokeninfo"))
 
-(def ^:private expire-response-seconds 300)
+; Key must be unique per user per application
+; aud: Auth0 client id
+; sub: User id
+(defn- build-cache-key [{:keys [sub aud]}]
+  (str "token-info-" aud "-" sub))
 
-(def ^:private build-cache-key (partial str "token-info-"))
-
-(defn- get-auth0-user-info-response [cache id-token subdomain]
+(defn- get-auth0-user-info-response [cache id-token subdomain claims]
   (let [response (client/post (auth0-token-info-url subdomain)
                               {:throw-exceptions false
                                :content-type :json
@@ -22,14 +24,13 @@
     (if (= 200 status)
       (do
         (.set cache
-              (build-cache-key id-token)
-              expire-response-seconds
+              (build-cache-key claims)
               body)
         body)
       nil)))
 
-(defn- get-cached-user-info-response [cache id-token _]
-  (.get cache (build-cache-key id-token)))
+(defn- get-cached-user-info-response [cache claims]
+  (.get cache (build-cache-key claims)))
 
 (defn- extract-token [auth-header]
   (let [[_ id-token] (re-matches #"^Bearer (.*)$" auth-header)]
@@ -50,9 +51,9 @@
                   :headers
                   (get "authorization" "")
                   extract-token)]
-      (if (jwt/valid? client-secret token :aud client-id :secret-fn jwt/decode-base-64)
-        (if-let [response (or (get-cached-user-info-response cache token subdomain)
-                              (get-auth0-user-info-response cache token subdomain) )]
+      (if-let [claims (jwt/validate client-secret token :aud client-id :secret-fn jwt/decode-base-64)]
+        (if-let [response (or (get-cached-user-info-response cache claims)
+                              (get-auth0-user-info-response cache token subdomain claims))]
           (assoc-in request
                     [:headers "x-user"]
                     response)

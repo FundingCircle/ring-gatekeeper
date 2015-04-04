@@ -7,7 +7,7 @@
   (get [this key]
     nil)
 
-  (set [this key expire value]
+  (set [this key value]
     nil))
 
 (defn new-cache []
