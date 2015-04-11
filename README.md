@@ -71,6 +71,22 @@ Options:
 * `key-prefix`: Prefix added on keys to prevent collisions
 * `expire-sec`: How long key should stay in the cache
 
+#### Redis
+
+```clojure
+(ns myapp.core
+  (:require [ring-gatekeeper.cache.redis :as redis])
+
+(def redis-conn {:pool {} :spec {:host "127.0.0.1" :port 6379}})
+(def auth-cache (redis/new-cache redis-conn {:key-prefix "user-info:"
+                                             :expire-sec 2400}))
+```
+
+Options:
+
+* `key-prefix`: Prefix added on keys to prevent collisions
+* `expire-sec`: How long key should stay in the cache
+
 ## License
 
 Copyright © 2015 Funding Circle
