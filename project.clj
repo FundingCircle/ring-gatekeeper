@@ -1,4 +1,4 @@
-(defproject ring-gatekeeper "0.1.3"
+(defproject ring-gatekeeper "0.1.4"
   :description "Authentication middleware"
   :url "https://github.com/FundingCircle/ring-gatekeeper"
   :license {:name "BSD 3-clause"
@@ -11,4 +11,4 @@
                  [clj-http "1.1.1"]
                  [clojurewerkz/spyglass "1.1.0"]
                  [com.taoensso/carmine "2.9.2"]
-                 [jerks-whistling-tunes "0.1.2"]])
+                 [jerks-whistling-tunes "0.2.4"]])
