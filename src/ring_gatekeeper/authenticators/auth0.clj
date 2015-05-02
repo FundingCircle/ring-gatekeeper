@@ -3,8 +3,7 @@
             [clj-http.client :as client]
             [clojure.data.json :as json]
             [ring-gatekeeper.cache.noop :as noop-cache]
-            [jerks-whistling-tunes.core :as jwt]
-            [taoensso.timbre :as timbre :refer [log debug info error]]))
+            [jerks-whistling-tunes.core :as jwt]))
 
 (defn- auth0-token-info-url [subdomain]
   (str "https://" subdomain ".auth0.com/tokeninfo"))
