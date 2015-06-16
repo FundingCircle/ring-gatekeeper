@@ -12,5 +12,5 @@
   (set [this key value]
     (swap! ttl-cache c/miss key value)))
 
-(defn new-cache [ttl]
-  (Memory. (atom (c/ttl-cache-factory {} :ttl ttl))))
+(defn new-cache [ttl-millis]
+  (Memory. (atom (c/ttl-cache-factory {} :ttl ttl-millis))))
