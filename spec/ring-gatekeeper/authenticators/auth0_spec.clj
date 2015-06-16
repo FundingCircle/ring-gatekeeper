@@ -44,7 +44,7 @@
                                                    :subdomain "subdomain"}))
 
     (around [it]
-      (with-redefs [jwt/validate (fn [_ token & more]
+      (with-redefs [jwt/validate (fn [token & more]
                                    (if (= token "valid")
                                      {:sub "sub"
                                       :aud "aud"}
