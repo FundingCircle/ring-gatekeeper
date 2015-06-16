@@ -4,7 +4,7 @@ Gatekeeper is a collection of Ring middlewares and handlers for authenticating a
 
 ## Installation
 
-[ring-gatekeeper "0.1.3"]
+[ring-gatekeeper "0.1.4"]
 
 ## Usage
 
