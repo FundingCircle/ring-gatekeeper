@@ -40,7 +40,7 @@
     (with cached-authenticator (new-authenticator {:can-handle-request-fn (constantly true)
                                                    :client-id "client-id"
                                                    :client-secret "client-secret"
-                                                   :cache (ConstantCache. "token-info-aud-sub" "success")
+                                                   :cache (ConstantCache. "aud-sub" "success")
                                                    :subdomain "subdomain"}))
 
     (around [it]

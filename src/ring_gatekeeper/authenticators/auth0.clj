@@ -14,7 +14,7 @@
 ; aud: Auth0 client id
 ; sub: User id
 (defn- build-cache-key [{:keys [sub aud]}]
-  (str "token-info-" aud "-" sub))
+  (str aud "-" sub))
 
 (defn- get-auth0-user-info-response [cache id-token subdomain claims]
   (let [response (client/post (auth0-token-info-url subdomain)
