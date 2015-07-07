@@ -27,7 +27,7 @@
         (should (:handled (@auth-fn {}))))
 
       (it "has no user"
-        (should-not (get-in (@auth-fn {}) [:headers "x-user"]))))
+        (should-not (get-in (@auth-fn {:headers {"x-user" "unauth-user"}}) [:headers "x-user"]))))
 
     (context "when request is handled, but unauthorized"
       (with auth-fn (authenticate mark-request-handled
@@ -36,7 +36,7 @@
         (should (:handled (@auth-fn {}))))
 
       (it "is unauthorized"
-        (should-not (get-in (@auth-fn {}) [:headers "x-user"]))))
+        (should-not (get-in (@auth-fn {:headers {"x-user" "unauth-user"}}) [:headers "x-user"]))))
 
     (context "with an authenticated request"
       (with auth-fn (authenticate mark-request-handled
