@@ -11,48 +11,42 @@
     can-handle)
   (authenticate [this request]
     (if is-authenticated
-      (assoc request :authenticated true)
+      "user"
       false)))
 
-(defn- handle-authenticated-request [request]
-  (if (:authenticated request)
-    {:status 200}
-    (throw (Exception. "Request was not authenticated"))))
-
-(defn handle-throw[request]
-  (throw (Exception. "Should not have made it here")))
+(defn mark-request-handled [request]
+  (assoc request :handled true))
 
 (describe "ring-gatekeeper.core"
   (describe "authenticate"
     (context "when no authenticators can handle request"
-      (with auth-fn (authenticate handle-throw
+      (with auth-fn (authenticate mark-request-handled
                                   [(DumbAuthenticator. false false)]))
 
-      (it "is unauthorized"
-        (should= 401
-                 (:status (@auth-fn {})))))
+      (it "is passed through"
+        (should (:handled (@auth-fn {}))))
+
+      (it "has no user"
+        (should-not (get-in (@auth-fn {}) [:headers "x-user"]))))
 
     (context "when request is handled, but unauthorized"
-      (with auth-fn (authenticate handle-throw
+      (with auth-fn (authenticate mark-request-handled
                                   [(DumbAuthenticator. false false) (DumbAuthenticator. true false)]))
+      (it "is passed through"
+        (should (:handled (@auth-fn {}))))
+
       (it "is unauthorized"
-        (should= 401
-                 (:status (@auth-fn {})))))
+        (should-not (get-in (@auth-fn {}) [:headers "x-user"]))))
 
     (context "with an authenticated request"
-      (with auth-fn (authenticate handle-authenticated-request
+      (with auth-fn (authenticate mark-request-handled
                                   [(DumbAuthenticator. false false) (DumbAuthenticator. true true)]))
 
       (it "is successful"
-        (should= 200
-                 (:status (@auth-fn {})))))
+        (should= "user"
+                 (get-in (@auth-fn {}) [:headers "x-user"])))
 
-    (context "with a custom unauthorized response"
-      (with auth-fn (authenticate handle-throw
-                                  [(DumbAuthenticator. true false)]
-                                  {:unauthorized-response {:status 500}}))
-      (it "is server error"
-        (should= 500
-                 (:status (@auth-fn {})))))))
+      (it "is passed through"
+        (should (:handled (@auth-fn {})))))))
 
 (run-specs)

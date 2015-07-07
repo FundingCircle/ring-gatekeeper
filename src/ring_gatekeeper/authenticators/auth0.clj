@@ -56,13 +56,9 @@
                                     (jwt/signature (hs256 client-secret))
                                     (jwt/aud client-id)
                                     jwt/exp)]
-        (if-let [response (or (get-cached-user-info-response cache claims)
-                              (get-auth0-user-info-response cache token subdomain claims))]
-          (assoc-in request
-                    [:headers "x-user"]
-                    response)
-          false)
-        false))))
+        (or (get-cached-user-info-response cache claims)
+            (get-auth0-user-info-response cache token subdomain claims))
+        nil))))
 
 (defn new-authenticator [opts]
   (Auth0Authenticator. (decode-base-64 (:client-secret opts)) opts))

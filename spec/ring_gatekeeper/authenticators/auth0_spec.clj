@@ -67,13 +67,11 @@
 
     (it "adds the x-user header when successful"
       (should= "success"
-               (get-in (with-fake-routes-in-isolation successful-token-info
-                         (.authenticate @authenticator {:headers {"authorization" "Bearer valid"}}))
-                       [:headers "x-user"])))
+               (with-fake-routes-in-isolation successful-token-info
+                 (.authenticate @authenticator {:headers {"authorization" "Bearer valid"}}))))
 
     (it "does not hit auth0 when result is cached"
       (should= "success"
-               (get-in (.authenticate @cached-authenticator {:headers {"authorization" "Bearer valid"}})
-                       [:headers "x-user"])))))
+               (.authenticate @cached-authenticator {:headers {"authorization" "Bearer valid"}})))))
 
 (run-specs)
