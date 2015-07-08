@@ -5,5 +5,4 @@
   (handle-request? [this request]
                    "Determines if the authenticator can authenticate a request")
   (authenticate [this request]
-                "Authenticates the request and returns the modified request if successful, or false if not authenticated"))
-
+                "Returns the authenticated user, or nil if no user exists"))

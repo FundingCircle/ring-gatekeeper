@@ -14,7 +14,7 @@
 ; aud: Auth0 client id
 ; sub: User id
 (defn- build-cache-key [{:keys [sub aud]}]
-  (str "token-info-" aud "-" sub))
+  (str aud "-" sub))
 
 (defn- get-auth0-user-info-response [cache id-token subdomain claims]
   (let [response (client/post (auth0-token-info-url subdomain)
@@ -56,13 +56,9 @@
                                     (jwt/signature (hs256 client-secret))
                                     (jwt/aud client-id)
                                     jwt/exp)]
-        (if-let [response (or (get-cached-user-info-response cache claims)
-                              (get-auth0-user-info-response cache token subdomain claims))]
-          (assoc-in request
-                    [:headers "x-user"]
-                    response)
-          false)
-        false))))
+        (or (get-cached-user-info-response cache claims)
+            (get-auth0-user-info-response cache token subdomain claims))
+        nil))))
 
 (defn new-authenticator [opts]
   (Auth0Authenticator. (decode-base-64 (:client-secret opts)) opts))

@@ -1,17 +1,30 @@
-(ns ring-gatekeeper.core
-  (:require [clojure.data.json :as json]))
+(ns ring-gatekeeper.core)
 
 (def find-first (comp first filter))
 
-(def ^:private default-unauthorized-response
-  {:status 401
-   :body (json/write-str {:message "Not authenticated"})})
+(defn- dissoc-in
+  "Dissociates an entry from a nested associative structure returning a new
+  nested structure. keys is a sequence of keys. Any empty maps that result
+  will not be present in the new structure."
+  [m [k & ks :as keys]]
+  (if ks
+    (if-let [nextmap (get m k)]
+      (let [newmap (dissoc-in nextmap ks)]
+        (if (seq newmap)
+          (assoc m k newmap)
+          (dissoc m k)))
+      m)
+    (dissoc m k)))
+
+(defn- strip-user [request]
+  (dissoc-in request [:headers "x-user"]))
 
 (defn authenticate [handler authenticators & [opts]]
-  (let [unauthorized-response (get opts :unauthorized-response default-unauthorized-response)]
-    (fn [request]
-      (if-let [authenticator (find-first #(.handle-request? % request) authenticators)]
-        (if-let [authenticated-request (.authenticate authenticator request)]
-          (handler authenticated-request)
-          unauthorized-response)
-        unauthorized-response))))
+  (fn [request]
+    (if-let [authenticator (find-first #(.handle-request? % request) authenticators)]
+      (if-let [user-info (.authenticate authenticator request)]
+        (handler (assoc-in request
+                           [:headers "x-user"]
+                           user-info))
+        (handler (strip-user request)))
+      (handler (strip-user request)))))

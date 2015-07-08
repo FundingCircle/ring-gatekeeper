@@ -4,7 +4,7 @@ Gatekeeper is a collection of Ring middlewares and handlers for authenticating a
 
 ## Installation
 
-[ring-gatekeeper "0.1.5"]
+[ring-gatekeeper "0.2.0"]
 
 ## Usage
 
@@ -15,14 +15,13 @@ Gatekeeper is a collection of Ring middlewares and handlers for authenticating a
   (:require [ring-gatekeeper.core :as auth])
 
 (def app (-> root-handler
-             (auth/authenticate [(MyAuthenticator.) (.MyOtherAuthenticator)]
-                                {:unauthorized-response {:status 401 :body "Unauthorized"}})))
+             (auth/authenticate [(MyAuthenticator.) (.MyOtherAuthenticator)])))
 ```
 The authentication middleware is responsible for authenticating requests. It accepts a sequence of
 authenticators that the actual authentication is delegated to. The authenticators are called in order
-until one is found that can handle the request. If no matching authenticators are found, or the authenticator
-reports that the request is not authorized, the optional unauthorized response is returned. Otherwise, the request
-continues in the chain.
+until one is found that can handle the request. If a user can be authenticated, the user information
+is set on the 'X-User' header. If no matching authenticators are found, or the authenticator
+reports that the request is not authorized, the request is passed through with no user.
 
 ### Authenticators
 
@@ -30,7 +29,7 @@ Authenticators provide an interface to 3rd party authentication services.
 
 #### Auth0
 
-Authenticates the user's JWT and adds the user's information in the `x-user` header.
+Authenticates the user's JWT and adds the user's information from Auth0.
 
 ```clojure
 (ns myapp.core
