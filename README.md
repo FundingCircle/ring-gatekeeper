@@ -4,7 +4,7 @@ Gatekeeper is a collection of Ring middlewares and handlers for authenticating a
 
 ## Installation
 
-[ring-gatekeeper "0.2.0"]
+[![Clojars Project](http://clojars.org/ring-gatekeeper/latest-version.svg)](http://clojars.org/ring-gatekeeper)
 
 ## Usage
 
