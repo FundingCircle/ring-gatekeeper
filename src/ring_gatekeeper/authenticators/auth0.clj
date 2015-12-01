@@ -33,9 +33,14 @@
 (defn- get-cached-user-info-response [cache claims]
   (.get cache (build-cache-key claims)))
 
-(defn- extract-token [auth-header]
+(defn- extract-token-from-auth-header [auth-header]
   (let [[_ id-token] (re-matches #"^Bearer (.*)$" auth-header)]
     id-token))
+
+(defn- extract-token [request]
+  (let [auth-header (get-in request [:headers "authorization"] "")]
+    (or (extract-token-from-auth-header auth-header)
+        (get-in request [:params "id-token"]))))
 
 (def default-cache (noop-cache/new-cache))
 
@@ -48,10 +53,7 @@
   (authenticate [this request]
     (let [{:keys [client-id subdomain]} opts
           cache (get opts :cache default-cache)
-          token (-> request
-                  :headers
-                  (get "authorization" "")
-                  extract-token)]
+          token (extract-token request)]
       (if-let [claims (jwt/validate token
                                     (jwt/signature (hs256 client-secret))
                                     (jwt/aud client-id)
