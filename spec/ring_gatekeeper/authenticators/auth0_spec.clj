@@ -1,7 +1,7 @@
 (ns ring-gatekeeper.authenticators.auth0-spec
   (:require [clj-http.client] ; Must be loaded before clj-http.fake
             [clj-http.fake :refer [with-fake-routes-in-isolation]]
-            [ring-gatekeeper.authenticators.auth0 :refer :all]
+            [ring-gatekeeper.authenticators.auth0 :refer :all :as auth0]
             [ring-gatekeeper.cache.core :as cache]
             [jerks-whistling-tunes.core :as jwt]
             [speclj.core :refer :all]))
@@ -73,5 +73,28 @@
     (it "does not hit auth0 when result is cached"
       (should= "success"
                (.authenticate @cached-authenticator {:headers {"authorization" "Bearer valid"}})))))
+
+(context "#'auth0/extract-token-from-auth-header"
+  (describe "extract token from auth header"
+     (it "should not be valid if not ^Bearer"
+         (should-not (#'auth0/extract-token-from-auth-header "not valid")))
+     (it "should be valid if ^Bearer"
+         (should= (#'auth0/extract-token-from-auth-header
+                   "Bearer somethingvalid")
+                  "somethingvalid"))))
+(context "#'auth0/extract-token"
+  (describe "extract token from query string"
+    (it "should get token from header"
+        (should= (#'auth0/extract-token {:headers {"authorization" "Bearer x"}})
+                 "x"))
+    (it "should default to getting token from header"
+        (should= (#'auth0/extract-token {:headers {"authorization" "Bearer x"}
+                                         :params {"id-token" "y"}})
+                 "x"))
+    (it "should get token from query string"
+        (should= (#'auth0/extract-token {:params {"id-token" "y"}})
+                 "y")))
+  (describe "no token to extract"
+    (it "should be nil" (should-not (#'auth0/extract-token {})))))
 
 (run-specs)
