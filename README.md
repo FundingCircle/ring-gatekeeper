@@ -19,9 +19,19 @@ Gatekeeper is a collection of Ring middlewares and handlers for authenticating a
 ```
 The authentication middleware is responsible for authenticating requests. It accepts a sequence of
 authenticators that the actual authentication is delegated to. The authenticators are called in order
-until one is found that can handle the request. If a user can be authenticated, the user information
+until one is found that can handle the request.
+
+Requests are authenticated with an authentication token, which is extracted from the following
+locations, in order of preference:
+
+* the Bearer token from `(get-in request [:headers "authorization"])`
+* the "id-token" query parameter from `(get-in request [:params "id-token"])`
+  (you may need to use the `wrap-params` middleware for this to work)
+
+If a user can be authenticated, the user information
 is set on the 'X-User' header. If no matching authenticators are found, or the authenticator
 reports that the request is not authorized, the request is passed through with no user.
+Any 'X-User' headers on the original request will be stripped.
 
 ### Authenticators
 
