@@ -4,12 +4,12 @@
   :license {:name "BSD 3-clause"
             :url "http://opensource.org/licenses/BSD-3-Clause"}
   :plugins [[speclj "3.2.0"]]
-  :profiles {:dev {:dependencies [[speclj "3.2.0"]
-                                  [clj-http-fake "1.0.1"]]}}
+  :profiles {:dev {:dependencies [[speclj "3.3.2"]
+                                  [clj-http-fake "1.0.3"]]}}
   :test-paths ["spec"]
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/core.cache "0.6.4"]
-                 [clj-http "1.1.1"]
-                 [clojurewerkz/spyglass "1.1.0"]
-                 [com.taoensso/carmine "2.9.2"]
-                 [jerks-whistling-tunes "0.2.4"]])
+  :dependencies [[org.clojure/clojure "1.9.0"]
+                 [org.clojure/core.cache "0.6.5"]
+                 [clj-http "3.7.0"]
+                 [clojurewerkz/spyglass "1.2.0"]
+                 [com.taoensso/carmine "2.17.0"]
+                 [jerks-whistling-tunes "0.3.2"]])

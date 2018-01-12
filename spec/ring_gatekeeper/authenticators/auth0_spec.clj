@@ -22,8 +22,8 @@
 
 (context "ring-gatekeeper.authenticators.auth0"
   (describe "handle-request?"
-    (with truthy-authenticator (new-authenticator {:can-handle-request-fn (constantly true)}))
-    (with falsy-authenticator (new-authenticator {:can-handle-request-fn (constantly false)}))
+    (with truthy-authenticator (new-authenticator {:can-handle-request-fn (constantly true) :client-secret "client-secret"}))
+    (with falsy-authenticator (new-authenticator {:can-handle-request-fn (constantly false) :client-secret "client-secret"}))
 
     (it "returns truthy function result"
       (should (.handle-request? @truthy-authenticator {})))
