@@ -12,4 +12,5 @@
                  [clj-http "3.7.0"]
                  [clojurewerkz/spyglass "1.2.0"]
                  [com.taoensso/carmine "2.17.0"]
-                 [jerks-whistling-tunes "0.3.2"]])
+                 [jerks-whistling-tunes "0.3.2"]]
+  :deploy-repositories [["releases" :clojars]])
