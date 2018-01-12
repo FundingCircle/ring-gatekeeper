@@ -1,4 +1,4 @@
-(defproject fundingcircle/ring-gatekeeper "0.3.0"
+(defproject fundingcircle/ring-gatekeeper "0.3.1-SNAPSHOT"
   :description "Authentication middleware"
   :url "https://github.com/FundingCircle/ring-gatekeeper"
   :license {:name "BSD 3-clause"
