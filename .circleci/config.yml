@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: clojure:lein-alpine
+      - image: redis:alpine
+    steps:
+      - checkout
+      - restore_cache:
+          key: ring-gatekeeper-{{ checksum "project.clj" }}
+      - run: lein deps
+      - save_cache:
+          key: ring-gatekeeper-{{ checksum "project.clj" }}
+          paths:
+            - ~/.m2
+      - run: lein spec
+    working_directory: ~/ring-gatekeeper
