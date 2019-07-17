@@ -23,15 +23,8 @@
   (fn [request]
     (if-let [authenticator (find-first #(.handle-request? % request) authenticators)]
       (if-let [user-info (.authenticate authenticator request)]
-        (do
-          (prn "user-info: " user-info)
-          (handler (assoc-in request
-                             [:headers "x-user"]
-                             user-info)))
-        (do
-          (prn "#### failed 1")
-          (handler (strip-user request))))
-      
-      (do 
-        (prn "### failed 2")
-        (handler (strip-user request))))))
+        (handler (assoc-in request
+                           [:headers "x-user"]
+                           user-info))
+        (handler (strip-user request)))
+      (handler (strip-user request)))))
