@@ -8,7 +8,7 @@
             [jerks-whistling-tunes.utils :refer [decode-base-64]]))
 
 (defn- auth0-token-info-url [subdomain]
-  (str "https://" subdomain ".auth0.com/tokeninfo"))
+  (str "https://" subdomain ".auth0.com/userinfo"))
 
 ; Key must be unique per user per application
 ; aud: Auth0 client id
@@ -17,11 +17,15 @@
   (str aud "-" sub))
 
 (defn- get-auth0-user-info-response [cache id-token subdomain claims]
+  (prn "user info params" {:throw-exceptions false
+                           :content-type :json
+                           :headers {:authorization (str "Bearer " id-token)}})
   (let [response (client/post (auth0-token-info-url subdomain)
                               {:throw-exceptions false
                                :content-type :json
-                               :body (json/write-str {:id_token id-token})})
+                               :headers {:authorization (str "Bearer " id-token)}})
         {:keys [body status]} response]
+    (prn "###### response" response)
     (if (= 200 status)
       (do
         (.set cache
@@ -54,12 +58,11 @@
     (let [{:keys [client-id subdomain]} opts
           cache (get opts :cache default-cache)
           token (extract-token request)]
-      (if-let [claims (jwt/validate token
-                                    (jwt/signature (hs256 client-secret))
-                                    (jwt/aud client-id)
-                                    jwt/exp)]
-        (or (get-cached-user-info-response cache claims)
-            (get-auth0-user-info-response cache token subdomain claims))
+      (if-let [claims true]
+        (do
+          (prn "############## claims:" claims)
+          (or (get-cached-user-info-response cache claims)
+              (get-auth0-user-info-response cache token subdomain claims)))
         nil))))
 
 (defn new-authenticator [opts]
