@@ -9,6 +9,9 @@
 (def failed-token-info {"https://subdomain.auth0.com/tokeninfo" {:post (fn [req] {:status 401 :body "{}"})}})
 (def successful-token-info {"https://subdomain.auth0.com/tokeninfo" {:post (fn [req] {:status 200 :body "success"})}})
 
+(def failed-user-info {"https://subdomain.auth0.com/userinfo" {:post (fn [req] {:status 401 :body "{}"})}})
+(def successful-user-info {"https://subdomain.auth0.com/userinfo" {:post (fn [req] {:status 200 :body "success"})}})
+
 (deftype ConstantCache [expected-key result]
   cache/Cache
 
@@ -32,47 +35,64 @@
       (should-not (.handle-request? @falsy-authenticator {}))))
 
   (describe "authenticate"
-    (with authenticator (new-authenticator {:can-handle-request-fn (constantly true)
-                                            :client-id "client-id"
-                                            :client-secret "client-secret"
-                                            :subdomain "subdomain"}))
+            (with authenticator (new-authenticator {:can-handle-request-fn (constantly true)
+                                                    :client-id "client-id"
+                                                    :client-secret "client-secret"
+                                                    :subdomain "subdomain"}))
 
-    (with cached-authenticator (new-authenticator {:can-handle-request-fn (constantly true)
-                                                   :client-id "client-id"
-                                                   :client-secret "client-secret"
-                                                   :cache (ConstantCache. "aud-sub" "success")
-                                                   :subdomain "subdomain"}))
+            (with cached-authenticator (new-authenticator {:can-handle-request-fn (constantly true)
+                                                           :client-id "client-id"
+                                                           :client-secret "client-secret"
+                                                           :cache (ConstantCache. "aud-sub" "success")
+                                                           :subdomain "subdomain"}))
 
-    (around [it]
-      (with-redefs [jwt/validate (fn [token & more]
-                                   (if (= token "valid")
-                                     {:sub "sub"
-                                      :aud "aud"}
-                                     false))]
-        (it)))
+            (with authenticator-using-access-token (new-authenticator {:can-handle-request-fn (constantly true)
+                                                                       :client-id "client-id"
+                                                                       :client-secret "client-secret"
+                                                                       :subdomain "subdomain"
+                                                                       :use-access-token? true}))
 
-    (it "is not authenticated without an authorization header"
-      (should-not (.authenticate @authenticator {:headers {}})))
+            (around [it]
+                    (with-redefs [jwt/validate (fn [token & more]
+                                                 (if (= token "valid")
+                                                   {:sub "sub"
+                                                    :aud "aud"}
+                                                   false))]
+                      (it)))
 
-    (it "is not authenticated with a malformed authorization header"
-      (should-not (.authenticate @authenticator {:headers {"authorization" "not valid"}})))
+            (it "is not authenticated without an authorization header"
+                (should-not (.authenticate @authenticator {:headers {}})))
 
-    (it "handles invalid tokens"
-      (should-not (.authenticate @authenticator {:headers {"authorization" "Bearer invalid"}})))
+            (it "is not authenticated with a malformed authorization header"
+                (should-not (.authenticate @authenticator {:headers {"authorization" "not valid"}})))
 
-    (it "handles auth0 error"
-      (should-not
-        (with-fake-routes-in-isolation failed-token-info
-          (.authenticate @authenticator {:headers {"authorization" "Bearer valid"}}))))
+            (it "handles invalid tokens"
+                (should-not (.authenticate @authenticator {:headers {"authorization" "Bearer invalid"}})))
 
-    (it "adds the x-user header when successful"
-      (should= "success"
-               (with-fake-routes-in-isolation successful-token-info
-                 (.authenticate @authenticator {:headers {"authorization" "Bearer valid"}}))))
+            (it "handles auth0 error"
+                (should-not
+                 (with-fake-routes-in-isolation failed-token-info
+                   (.authenticate @authenticator {:headers {"authorization" "Bearer valid"}}))))
 
-    (it "does not hit auth0 when result is cached"
-      (should= "success"
-               (.authenticate @cached-authenticator {:headers {"authorization" "Bearer valid"}})))))
+            (it "adds the x-user header when successful"
+                (should= "success"
+                         (with-fake-routes-in-isolation successful-token-info
+                           (.authenticate @authenticator {:headers {"authorization" "Bearer valid"}}))))
+
+            (it "does not hit auth0 when result is cached"
+                (should= "success"
+                         (.authenticate @cached-authenticator {:headers {"authorization" "Bearer valid"}})))
+
+            ;; todo validate test works with 
+            (it "should add the x-user when successful while ussing access token"
+                (should= "success"
+                         (with-fake-routes-in-isolation successful-user-info
+                           (.authenticate @authenticator-using-access-token {:headers {"authorization" "Bearer valid"}}))))
+
+            (it "should add not add x-user when the token is invalid while ussing access token"
+                (should-not
+                 (with-fake-routes-in-isolation failed-user-info
+                   (.authenticate @authenticator-using-access-token {:headers {"authorization" "Bearer valid"}}))))))
 
 (context "#'auth0/extract-token-from-auth-header"
   (describe "extract token from auth header"
